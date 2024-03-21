@@ -22,10 +22,10 @@ class AtomRssParser extends RssParser {
 
   private Function<Element, ParsedFeed> mapToResponse() {
     return item -> new ParsedFeed(
-        selectFirstText(item, TITLE_SELECTOR),
-        selectFirstAttr(item, URL_SELECTOR, URL_ATTR),
-        selectFirstText(item, DESCRIPTION_SELECTOR),
-        selectFirstText(item, THUMBNAIL_URL_SELECTOR)
+        selectFirstTextOrEmpty(item, TITLE_SELECTOR),
+        selectFirstAttrOrEmpty(item, URL_SELECTOR, URL_ATTR),
+        selectFirstTextOrEmpty(item, DESCRIPTION_SELECTOR),
+        selectFirstTextOrEmpty(item, THUMBNAIL_URL_SELECTOR)
     );
   }
 }

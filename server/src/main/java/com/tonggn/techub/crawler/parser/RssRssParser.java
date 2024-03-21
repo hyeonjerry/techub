@@ -22,10 +22,10 @@ class RssRssParser extends RssParser {
 
   private Function<Element, ParsedFeed> mapToResponse() {
     return item -> new ParsedFeed(
-        selectFirstText(item, TITLE_SELECTOR),
-        selectFirstText(item, URL_SELECTOR),
-        selectFirstText(item, DESCRIPTION_SELECTOR),
-        selectFirstText(item, THUMBNAIL_URL_SELECTOR)
+        selectFirstTextOrEmpty(item, TITLE_SELECTOR),
+        selectFirstTextOrEmpty(item, URL_SELECTOR),
+        selectFirstTextOrEmpty(item, DESCRIPTION_SELECTOR),
+        selectFirstTextOrEmpty(item, THUMBNAIL_URL_SELECTOR)
     );
   }
 }
