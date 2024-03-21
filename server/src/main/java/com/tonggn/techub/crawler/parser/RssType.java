@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 
 @RequiredArgsConstructor
-public enum RssType {
+enum RssType {
   RDF("rdf:RDF"),
   RSS("rss"),
   ATOM("feed");

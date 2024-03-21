@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public abstract class RssParser {
+abstract class RssParser {
 
   private static final Map<RssType, RssParser> parsers = Map.of(
       RssType.RDF, new RdfRssParser(),
