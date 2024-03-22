@@ -1,17 +1,21 @@
 package com.tonggn.techub.crawler.parser;
 
 import java.util.Arrays;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 
 @RequiredArgsConstructor
 enum RssType {
-  RDF("rdf:RDF"),
-  RSS("rss"),
-  ATOM("feed");
+  RDF("rdf:RDF", new RdfRssParser()),
+  RSS("rss", new RssRssParser()),
+  ATOM("feed", new AtomRssParser());
 
-  public static final int ROOT_TAG_INDEX = 0;
+  private static final int ROOT_TAG_INDEX = 0;
+
   private final String rootTagName;
+  @Getter
+  private final RssParser parser;
 
   public static RssType from(final Document document) {
     final String rootTagName = document.child(ROOT_TAG_INDEX).tagName();
