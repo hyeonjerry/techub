@@ -10,8 +10,6 @@ class AtomRssParser extends RssParser {
   private static final String TITLE_SELECTOR = "title";
   private static final String URL_SELECTOR = "link";
   private static final String URL_ATTR = "href";
-  private static final String DESCRIPTION_SELECTOR = "summary";
-  private static final String THUMBNAIL_URL_SELECTOR = "image";
 
   @Override
   public List<ParsedFeed> parse(final Document document) {
@@ -23,9 +21,7 @@ class AtomRssParser extends RssParser {
   private Function<Element, ParsedFeed> mapToResponse() {
     return item -> new ParsedFeed(
         selectFirstTextOrEmpty(item, TITLE_SELECTOR),
-        selectFirstAttrOrEmpty(item, URL_SELECTOR, URL_ATTR),
-        selectFirstTextOrEmpty(item, DESCRIPTION_SELECTOR),
-        selectFirstTextOrEmpty(item, THUMBNAIL_URL_SELECTOR)
+        selectFirstAttrOrEmpty(item, URL_SELECTOR, URL_ATTR)
     );
   }
 }

@@ -10,8 +10,6 @@ class RssRssParser extends RssParser {
   private static final String FEED_SELECTOR = "channel > item";
   private static final String TITLE_SELECTOR = "title";
   private static final String URL_SELECTOR = "link";
-  private static final String DESCRIPTION_SELECTOR = "description";
-  private static final String THUMBNAIL_URL_SELECTOR = "image";
 
   @Override
   public List<ParsedFeed> parse(final Document document) {
@@ -23,9 +21,7 @@ class RssRssParser extends RssParser {
   private Function<Element, ParsedFeed> mapToResponse() {
     return item -> new ParsedFeed(
         selectFirstTextOrEmpty(item, TITLE_SELECTOR),
-        selectFirstTextOrEmpty(item, URL_SELECTOR),
-        selectFirstTextOrEmpty(item, DESCRIPTION_SELECTOR),
-        selectFirstTextOrEmpty(item, THUMBNAIL_URL_SELECTOR)
+        selectFirstTextOrEmpty(item, URL_SELECTOR)
     );
   }
 }
