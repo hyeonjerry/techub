@@ -7,7 +7,7 @@ import org.jsoup.nodes.Element;
 
 class RdfRssParser extends RssParser {
 
-  private static final String FEED_SELECTOR = "channel > item";
+  private static final String FEED_SELECTOR = "item";
   private static final String TITLE_SELECTOR = "title";
   private static final String URL_SELECTOR = "link";
 
