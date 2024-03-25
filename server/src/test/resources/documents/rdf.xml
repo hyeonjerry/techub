@@ -15,17 +15,17 @@
     </items>
   </channel>
 
-  <item rdf:about="http://www.example.com/item/1">
+  <item rdf:about="https://example.com/item/1">
     <title>item1</title>
     <description>Here is some text containing an interesting description.</description>
-    <link>http://www.example.com/item/1</link>
+    <link>https://example.com/item/1</link>
     <dc:date>2009-09-06T16:20:00Z</dc:date>
   </item>
 
-    <item rdf:about="http://www.example.com/item/2">
+    <item rdf:about="https://example.com/item/2">
       <title>item2</title>
       <description>Here is some text containing an interesting description.</description>
-      <link>http://www.example.com/item/2</link>
+      <link>https://example.com/item/2</link>
       <dc:date>2009-09-06T16:20:00Z</dc:date>
     </item>
 

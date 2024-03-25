@@ -10,7 +10,7 @@
 
   <entry>
     <title>item1</title>
-    <link href="http://www.example.com/item/1"/>
+    <link href="https://example.com/item/1"/>
     <id>7bd204c6-1655-4c27-aeee-53f933c5395f</id>
     <updated>2009-09-06T16:20:00Z</updated>
     <summary>Here is some text containing an interesting description.</summary>
@@ -18,7 +18,7 @@
 
   <entry>
     <title>item2</title>
-    <link href="http://www.example.com/item/2"/>
+    <link href="https://example.com/item/2"/>
     <id>7bd204c6-1655-4c27-aeee-53f933c5395f</id>
     <updated>2009-09-06T16:20:00Z</updated>
     <summary>Here is some text containing an interesting description.</summary>
