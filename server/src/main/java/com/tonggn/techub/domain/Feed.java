@@ -34,4 +34,13 @@ public class Feed {
   private String description;
 
   private String thumbnailUrl;
+
+  public Feed(final Publisher publisher, final String title, final String url, final String description,
+      final String thumbnailUrl) {
+    this.publisher = publisher;
+    this.title = title;
+    this.url = url;
+    this.description = description;
+    this.thumbnailUrl = thumbnailUrl;
+  }
 }
