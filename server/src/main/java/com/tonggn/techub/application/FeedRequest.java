@@ -1,4 +1,4 @@
-package com.tonggn.techub.scheduler;
+package com.tonggn.techub.application;
 
 public record FeedRequest(
     String title,

@@ -1,5 +1,6 @@
 package com.tonggn.techub.scheduler;
 
+import com.tonggn.techub.application.FeedRequest;
 import com.tonggn.techub.application.FeedService;
 import com.tonggn.techub.application.PublisherResponse;
 import com.tonggn.techub.application.PublisherService;

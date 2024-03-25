@@ -4,7 +4,6 @@ import com.tonggn.techub.domain.Feed;
 import com.tonggn.techub.domain.FeedRepository;
 import com.tonggn.techub.domain.Publisher;
 import com.tonggn.techub.domain.PublisherRepository;
-import com.tonggn.techub.scheduler.FeedRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
