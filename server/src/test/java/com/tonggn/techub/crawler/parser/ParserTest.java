@@ -3,6 +3,7 @@ package com.tonggn.techub.crawler.parser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jsoup.parser.Parser.xmlParser;
 
+import com.tonggn.techub.crawler.parser.ParsedFeed.Builder;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -17,8 +18,8 @@ class ParserTest {
   private static final String rssPathname = "src/test/resources/rss/rss.xml";
   private static final String atomPathname = "src/test/resources/rss/atom.xml";
   private final List<ParsedFeed> expected = List.of(
-      new ParsedFeed("item1", "http://www.example.com/item/1"),
-      new ParsedFeed("item2", "http://www.example.com/item/2")
+      new ParsedFeed.Builder("item1", "https://example.com/item/1").build(),
+      new ParsedFeed.Builder("item2", "https://example.com/item/2").build()
   );
 
   @Test

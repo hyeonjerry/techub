@@ -1,7 +1,6 @@
 package com.tonggn.techub.crawler.parser;
 
 import java.util.List;
-import java.util.function.Function;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -14,14 +13,14 @@ class RssRssParser extends RssParser {
   @Override
   public List<ParsedFeed> parse(final Document document) {
     return document.select(FEED_SELECTOR).stream()
-        .map(mapToResponse())
+        .map(this::mapToResponse)
         .toList();
   }
 
-  private Function<Element, ParsedFeed> mapToResponse() {
-    return item -> new ParsedFeed(
-        selectFirstTextOrEmpty(item, TITLE_SELECTOR),
-        selectFirstTextOrEmpty(item, URL_SELECTOR)
-    );
+  private ParsedFeed mapToResponse(final Element item) {
+    final String title = selectFirstTextOrEmpty(item, TITLE_SELECTOR);
+    final String url = selectFirstTextOrEmpty(item, URL_SELECTOR);
+    return new ParsedFeed.Builder(title, url)
+        .build();
   }
 }
