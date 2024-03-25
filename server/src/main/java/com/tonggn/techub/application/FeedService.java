@@ -27,8 +27,7 @@ public class FeedService {
         .orElseThrow(() -> new IllegalArgumentException("Publisher not found: " + publisherId));
 
     final List<Feed> feeds = requests.stream()
-        .map(request -> new Feed(publisher, request.title(), request.url(),
-            request.description(), request.thumbnail()))
+        .map(request -> request.toEntity(publisher))
         .toList();
 
     feedRepository.saveAll(feeds);

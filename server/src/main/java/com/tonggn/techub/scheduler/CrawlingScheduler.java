@@ -26,8 +26,7 @@ public class CrawlingScheduler {
     for (final PublisherResponse publisher : publishers) {
       final Long publisherId = publisher.id();
 
-      final List<ParsedFeed> newRssFeeds = Crawler.crawlRss(publisher.rssUrl())
-          .stream()
+      final List<ParsedFeed> newRssFeeds = Crawler.crawlRss(publisher.rssUrl()).stream()
           .filter(feed -> feedService.isNewFeed(publisherId, feed.url()))
           .toList();
 
