@@ -69,4 +69,26 @@ class ParserTest {
         .usingRecursiveComparison()
         .isEqualTo(expected);
   }
+
+  @Test
+  @DisplayName("Opengraph 파싱 테스트")
+  void OpengraphParseTest() throws IOException {
+    // given
+    final String pathname = "src/test/resources/opengraph.html";
+    final File file = new File(pathname);
+    final Document document = Jsoup.parse(file);
+
+    final ParsedFeed expected = new Builder("title", "https://exmaple.com")
+        .description("description")
+        .thumbnailUrl("https://exmaple.com/image")
+        .build();
+
+    // when
+    final ParsedFeed actual = Parser.parseFeed(document);
+
+    // then
+    assertThat(actual)
+        .usingRecursiveComparison()
+        .isEqualTo(expected);
+  }
 }

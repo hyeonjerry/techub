@@ -14,6 +14,11 @@ public class Crawler {
     return Parser.parseRss(response);
   }
 
+  public static ParsedFeed crawlFeed(final String url) {
+    final Document response = request(url);
+    return Parser.parseFeed(response);
+  }
+
   private static Document request(final String url) {
     try {
       return Jsoup.connect(url)

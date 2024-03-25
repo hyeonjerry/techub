@@ -13,4 +13,8 @@ public class Parser {
     final RssParser parser = type.getParser();
     return parser.parse(document);
   }
+
+  public static ParsedFeed parseFeed(final Document document) {
+    return FeedParser.parse(document);
+  }
 }
