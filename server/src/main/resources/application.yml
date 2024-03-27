@@ -10,9 +10,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
   config:
     activate:
       on-profile: default
