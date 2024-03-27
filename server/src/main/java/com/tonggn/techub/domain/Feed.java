@@ -66,4 +66,24 @@ public class Feed extends BaseDatetimeEntity {
     }
     return desc.length() > DESC_LIMIT_LENGTH ? desc.substring(0, DESC_LIMIT_LENGTH) : desc;
   }
+
+  public Feed mergeOpenGraphFeed(final Feed feed) {
+    return new Feed(
+        this.publisher,
+        this.title,
+        this.url,
+        getLonger(this.description, feed.description),
+        feed.thumbnailUrl
+    );
   }
+
+  private String getLonger(final String a, final String b) {
+    if (a == null) {
+      return b;
+    }
+    if (b == null) {
+      return a;
+    }
+    return a.length() > b.length() ? a : b;
+  }
+}
