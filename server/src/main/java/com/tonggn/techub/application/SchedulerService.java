@@ -12,24 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class FeedService {
+public class SchedulerService {
 
   private final FeedRepository feedRepository;
   private final PublisherRepository publisherRepository;
 
-  public boolean isNewFeed(final Long publisherId, final String url) {
-    return !feedRepository.existsByPublisherIdAndUrl(publisherId, url);
+  public List<Publisher> findAllPublishers() {
+    return publisherRepository.findAll();
+  }
+
+  public List<Feed> filterNewFeeds(final List<Feed> feeds) {
+    return feeds.stream()
+        .filter(feed -> !feedRepository.existsByPublisherAndUrl(feed.getPublisher(), feed.getUrl()))
+        .toList();
   }
 
   @Transactional
-  public void saveAll(final Long publisherId, final List<FeedRequest> requests) {
-    final Publisher publisher = publisherRepository.findById(publisherId)
-        .orElseThrow(() -> new IllegalArgumentException("Publisher not found: " + publisherId));
-
-    final List<Feed> feeds = requests.stream()
-        .map(request -> request.toEntity(publisher))
-        .toList();
-
+  public void saveAllFeeds(final List<Feed> feeds) {
     feedRepository.saveAll(feeds);
   }
 }

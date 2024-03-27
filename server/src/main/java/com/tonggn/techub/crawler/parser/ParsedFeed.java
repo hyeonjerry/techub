@@ -11,8 +11,8 @@ public record ParsedFeed(
 
     private final String title;
     private final String url;
-    private String description = "";
-    private String thumbnailUrl = "";
+    private String description;
+    private String thumbnailUrl;
 
     public Builder(final String title, final String url) {
       this.title = title;

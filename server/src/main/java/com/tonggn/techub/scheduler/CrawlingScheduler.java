@@ -1,12 +1,12 @@
 package com.tonggn.techub.scheduler;
 
-import com.tonggn.techub.application.FeedRequest;
-import com.tonggn.techub.application.FeedService;
-import com.tonggn.techub.application.PublisherResponse;
-import com.tonggn.techub.application.PublisherService;
+import com.tonggn.techub.application.SchedulerService;
 import com.tonggn.techub.crawler.Crawler;
 import com.tonggn.techub.crawler.parser.ParsedFeed;
+import com.tonggn.techub.domain.Feed;
+import com.tonggn.techub.domain.Publisher;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,34 +15,56 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CrawlingScheduler {
 
-  private final PublisherService publisherService;
-  private final FeedService feedService;
+  private final SchedulerService schedulerService;
 
   // cron = "초 분 시 일 월 요일"
   @Scheduled(cron = "0 0 * * * *")
   public void updateFeeds() {
-    final List<PublisherResponse> publishers = publisherService.findAll();
+    final List<Publisher> publishers = schedulerService.findAllPublishers();
 
-    for (final PublisherResponse publisher : publishers) {
-      final Long publisherId = publisher.id();
+    for (final Publisher publisher : publishers) {
+      final List<Feed> rssFeeds = fetchNewRssFeeds(publisher);
 
-      final List<ParsedFeed> newRssFeeds = Crawler.crawlRss(publisher.rssUrl()).stream()
-          .filter(feed -> feedService.isNewFeed(publisherId, feed.url()))
-          .toList();
+      final List<Feed> openGraphFeeds = fetchOpenGraphFeeds(publisher, rssFeeds);
 
-      final List<ParsedFeed> newFeeds = newRssFeeds.stream()
-          .map(feed -> Crawler.crawlFeed(feed.url()))
-          .toList();
+      final List<Feed> mergedFeeds = mergeFeeds(rssFeeds, openGraphFeeds);
 
-      final List<FeedRequest> saveRequests = newFeeds.stream()
-          .map(this::mapToFeedRequest)
-          .toList();
-
-      feedService.saveAll(publisherId, saveRequests);
+      schedulerService.saveAllFeeds(mergedFeeds);
     }
   }
 
-  private FeedRequest mapToFeedRequest(final ParsedFeed feed) {
-    return new FeedRequest(feed.title(), feed.url(), feed.description(), feed.thumbnailUrl());
+  private List<Feed> fetchNewRssFeeds(final Publisher publisher) {
+    final List<Feed> feeds = Crawler.crawlRss(publisher.getRssUrl()).stream()
+        .map(feed -> mapToFeed(publisher, feed))
+        .toList();
+
+    return schedulerService.filterNewFeeds(feeds);
+  }
+
+  private List<Feed> fetchOpenGraphFeeds(final Publisher publisher, final List<Feed> rssFeeds) {
+    return rssFeeds.stream()
+        .map(feed -> Crawler.crawlFeed(feed.getUrl()))
+        .map(feed -> mapToFeed(publisher, feed))
+        .toList();
+  }
+
+  private List<Feed> mergeFeeds(final List<Feed> rssFeeds, final List<Feed> openGraphFeeds) {
+    return IntStream.range(0, rssFeeds.size())
+        .mapToObj(i -> {
+          final Feed rssFeed = rssFeeds.get(i);
+          final Feed openGraphFeed = openGraphFeeds.get(i);
+          return rssFeed.mergeOpenGraphFeed(openGraphFeed);
+        })
+        .toList();
+  }
+
+  private Feed mapToFeed(final Publisher publisher, final ParsedFeed feed) {
+    return new Feed(
+        publisher,
+        feed.title(),
+        feed.url(),
+        feed.description(),
+        feed.thumbnailUrl()
+    );
   }
 }

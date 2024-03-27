@@ -18,6 +18,6 @@ class FeedParser {
 
   private static String extractOpengraph(final Document document, final String property) {
     final Element element = document.selectFirst("meta[property='" + property + "']");
-    return element == null ? "" : element.attr("content");
+    return element == null ? null : element.attr("content");
   }
 }
