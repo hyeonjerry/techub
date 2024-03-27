@@ -6,12 +6,14 @@ import com.tonggn.techub.crawler.parser.ParsedFeed;
 import com.tonggn.techub.domain.Feed;
 import com.tonggn.techub.domain.Publisher;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class CrawlingScheduler {
 
@@ -21,15 +23,21 @@ public class CrawlingScheduler {
   @Scheduled(cron = "0 0 * * * *")
   public void updateFeeds() {
     final List<Publisher> publishers = schedulerService.findAllPublishers();
+    publishers.forEach(this::updateFeed);
+  }
 
-    for (final Publisher publisher : publishers) {
-      final List<Feed> rssFeeds = fetchNewRssFeeds(publisher);
+  private void updateFeed(final Publisher publisher) {
+    try {
+      final List<Feed> newRssFeeds = fetchNewRssFeeds(publisher);
 
-      final List<Feed> openGraphFeeds = fetchOpenGraphFeeds(publisher, rssFeeds);
+      final List<Feed> feeds = newRssFeeds.stream()
+          .map(this::fetchAndMergeOpengraph)
+          .filter(Objects::nonNull)
+          .toList();
 
-      final List<Feed> mergedFeeds = mergeFeeds(rssFeeds, openGraphFeeds);
-
-      schedulerService.saveAllFeeds(mergedFeeds);
+      schedulerService.saveAllFeeds(feeds);
+    } catch (final Exception e) {
+      log.error("Failed to update feed for {}", publisher.getName(), e);
     }
   }
 
@@ -41,21 +49,15 @@ public class CrawlingScheduler {
     return schedulerService.filterNewFeeds(feeds);
   }
 
-  private List<Feed> fetchOpenGraphFeeds(final Publisher publisher, final List<Feed> rssFeeds) {
-    return rssFeeds.stream()
-        .map(feed -> Crawler.crawlFeed(feed.getUrl()))
-        .map(feed -> mapToFeed(publisher, feed))
-        .toList();
-  }
-
-  private List<Feed> mergeFeeds(final List<Feed> rssFeeds, final List<Feed> openGraphFeeds) {
-    return IntStream.range(0, rssFeeds.size())
-        .mapToObj(i -> {
-          final Feed rssFeed = rssFeeds.get(i);
-          final Feed openGraphFeed = openGraphFeeds.get(i);
-          return rssFeed.mergeOpenGraphFeed(openGraphFeed);
-        })
-        .toList();
+  private Feed fetchAndMergeOpengraph(final Feed feed) {
+    try {
+      final ParsedFeed parsedFeed = Crawler.crawlFeed(feed.getUrl());
+      final Feed openGraphFeed = mapToFeed(feed.getPublisher(), parsedFeed);
+      return feed.mergeOpenGraphFeed(openGraphFeed);
+    } catch (final Exception e) {
+      log.error("Failed to fetch OpenGraph data from {}", feed.getUrl(), e);
+      return null;
+    }
   }
 
   private Feed mapToFeed(final Publisher publisher, final ParsedFeed feed) {
