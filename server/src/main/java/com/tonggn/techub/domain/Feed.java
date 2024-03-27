@@ -1,5 +1,6 @@
 package com.tonggn.techub.domain;
 
+import com.tonggn.techub.base.BaseDatetimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode(callSuper = false, of = "id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Feed {
+public class Feed extends BaseDatetimeEntity {
 
   private static final int DESC_LIMIT_LENGTH = 255;
   @Id
